@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Favorite Books</title>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'users/css/foundation.css' %}" />
+        <link rel="stylesheet" href="{% static 'blanket/css/style.css' %}">
+    </head>
+    <body>
+        <div id="wrapper">
+            <div id="header">
+                <h2>You've made it, {{logged_in_user.first_name}}!</h2>
+                <a href="/logout">Logout</a>
+            </div>
+            <div id="main">
+            <div id="addbook">                
+                {% if thisbook.uploaded_by_id.id == logged_in_user.id %}
+                    <form action="{{thisbook.id}}/update" method='POST'>
+                        {% csrf_token %}
+                        <label>
+                            Update Title:
+                            <input type="text" name="title" value="{{thisbook.title}}">
+                            <span class="error">
+                                {% for message in messages %}
+                                    {% if message.tags == 'title error' %}
+                                        {{message}}
+                                    {% endif %}
+                                {% endfor %}
+                            </span>
+                        </label>
+                        <label>
+                            Update Description:
+                            <textarea name="desc" cols="30" rows="10">{{thisbook.desc}}</textarea>
+                            <span class="error">
+                                {% for message in messages %}
+                                    {% if message.tags == 'desc error' %}
+                                        {{message}}
+                                    {% endif %}
+                                {% endfor %}
+                            </span>
+                        </label>
+                        <button type="submit">Update</button>
+                    </form>
+                    <a href="{{thisbook.id}}/delete">Delete this Book</a>
+                {% else %}
+                <h4>{{thisbook.title}}</h4>
+                <span class="error">
+                    {% for message in messages %}
+                        {% if message.tags == 'bookowner error' %}
+                            {{message}}
+                        {% endif %}
+                    {% endfor %}
+                </span>
+                <p>{{thisbook.desc}}</p>
+                <p>Uploaded by: {{thisbook.uploaded_by_id.first_name}} {{thisbook.uploaded_by_id.last_name}}</p>
+                <p>Created: {{thisbook.created_at}}</p>
+                <p>Last updated: {{thisbook.updated_at}}</p>
+                {% endif %}
+                {% if logged_in_user not in thisbook.favorited_by.all %}
+                    <a href="{{thisbook.id}}/addfavorite">Make this a favorite</a>
+                {% endif %}
+            </div>
+            <div id="booklist">
+                <h5>
+                    Users who liked this book:
+                </h5>
+                {% for user in favorited_by_list %}
+                    <div class="favoriters">
+                        <h6>{{user.first_name}} {{user.last_name}}    </h6>
+                        {% if user.id == logged_in_user.id %}
+                            <a href="{{thisbook.id}}/unfavorite">unfavorite this book</a>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            </div>
+            <a href="/books">Back to book list</a>
+        </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="{% static 'js/script.js' %}"></script>
+    </body>
+</html>

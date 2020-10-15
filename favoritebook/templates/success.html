@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Favorite Books</title>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'users/css/foundation.css' %}" />
+        <link rel="stylesheet" href="{% static 'blanket/css/style.css' %}">
+    </head>
+    <body>
+        <div id="wrapper">
+            <div id="header">
+                <h2>You've made it, {{logged_in_user.first_name}}!</h2>
+                <a href="/logout">Logout</a>
+            </div>
+            <div id="main">
+            <div id = 'addbook'>
+                <form action="addbook" method='POST'>
+                    {% csrf_token %}
+                    <label>
+                        Title:
+                        <input type="text" name="title">
+                        <span class="error">
+                            {% for message in messages %}
+                                {% if message.tags == 'title error' %}
+                                    {{message}}
+                                {% endif %}
+                                {% if message.tags == 'duplicate error' %}
+                                    {{message}}
+                                {% endif %}
+                            {% endfor %}
+                        </span>
+                    </label>
+                    <label>
+                        Book Description:
+                        <textarea name="desc" cols="30" rows="10"></textarea>
+                        <span class="error">
+                            {% for message in messages %}
+                                {% if message.tags == 'desc error' %}
+                                    {{message}}
+                                {% endif %}
+                            {% endfor %}
+                        </span>
+                    </label>
+                    <button type="submit">Submit</button>
+                </form>
+
+            </div>
+            <div id="booklist">
+                {% for book in books %}
+                    <div class = 'bookitem'>
+                        <a href="{{book.id}}"><h5>{{book.title}}</h5></a>
+                        <p>{{book.desc}}</p>
+                        <p>(added by {{book.uploaded_by_id.first_name}} {{book.uploaded_by_id.last_name}})</p>
+                        {% if logged_in_user not in book.favorited_by.all %}
+                        <a href="{{book.id}}/addfavorite">Make this a favorite</a>
+                        {% else %}
+                        <p>This book is already one of your favorites</p>
+                        {% endif %}
+                        <hr>
+                    </div>
+                {% endfor %}
+            </div>
+            </div>
+        </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="{% static 'js/script.js' %}"></script>
+    </body>
+</html>

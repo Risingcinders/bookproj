@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Favorite Books</title>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'users/css/foundation.css' %}" />
+        <link rel="stylesheet" href="{% static 'users/css/style.css' %}">
+    </head>
+    <body>
+        <div id="wrapper">
+            <div id="activities">
+                <div>
+                    <h2>Register</h2>
+                    <form name="register" onsubmit="return validateForm()" action="register" method="POST">
+                        {% csrf_token %}
+                        <label>
+                            First Name:
+                            <input type="text" name="first_name" />
+                            <span class="error">
+                            {% for message in messages %}
+                                {% if message.tags == 'first_name error' %}
+                                    {{message}}
+                                {% endif %}
+                            {% endfor %}
+                            </span>
+                        </label>
+                        <br />
+                        <label>
+                            Last Name:
+                            <input type="text" name="last_name" />
+                            <span class="error">
+                            {% for message in messages %}
+                                {% if message.tags == 'last_name error' %}
+                                    {{message}}
+                                {% endif %}
+                            {% endfor %}
+                            </span>
+                        </label>
+                        <label>
+                            Email:
+                            <input type="text" name="email" />
+                            <span class="error">
+                                {% for message in messages %}
+                                    {% if message.tags == 'email error' %}
+                                        {{message}}
+                                    {% endif %}
+                                    {% if message.tags == 'duplicate error' %}
+                                        {{message}}
+                                    {% endif %}
+                                {% endfor %}
+                            </span>
+                        </label>
+                        <label>
+                            Birthday:
+                            <input
+                                type="date"
+                                name="birthday"
+                                value="2020-07-04"
+                            />
+                            <span class="error">
+                            {% for message in messages %}
+                                {% if message.tags == 'date error' %}
+                                    {{message}}
+                                {% endif %}
+                            {% endfor %}
+                            </span>
+                        </label>
+                        <br />
+                        <label>
+                            Password:
+                            <input type="password" name="password" />
+                            <span class="error">
+                            {% for message in messages %}
+                                {% if message.tags == 'password error' %}
+                                    {{message}}
+                                {% endif %}
+                            {% endfor %}
+                            </span>
+                        </label>
+                        <label>
+                            Retype Password:
+                            <input type="password" name="password2" />
+                            <span class="error">
+                            {% for message in messages %}
+                                {% if message.tags == 'passwordmatch error' %}
+                                    {{message}}
+                                {% endif %}
+                            {% endfor %}
+                            </span>
+                        </label>
+                        <br />
+                        <button type="submit">Add</button>
+                    </form>
+                </div>
+                <div>
+                    <h2>Login</h2>
+                    <form action="login" method="POST">
+                        {% csrf_token %}
+                        <label>
+                            Email:
+                            <input type="text" name="email" />
+                            <span class="error">
+                                {% for message in messages %}
+                                    {% if message.tags == 'loginerr error' %}
+                                        {{message}}
+                                    {% endif %}
+                                    {% if message.tags == 'email2 error' %}
+                                        {{message}}
+                                    {% endif %}
+                                {% endfor %}
+                            </span>
+                        </label>
+                        <br />
+                        <label>
+                            Password:
+                            <input type="password" name="password" />
+                            <span class="error">
+                            {% for message in messages %}
+                                    {% if message.tags == 'loginerr error' %}
+                                        {{message}}
+                                    {% endif %}
+                                    {% if message.tags == 'password2 error' %}
+                                        {{message}}
+                                    {% endif %}
+                                {% endfor %}
+                            </span>
+                        </label>
+                        <br />
+                        <button type="submit">Login</button>
+                    </form>
+                    
+                </div>
+                
+            </div>
+        </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="{% static 'users/js/loginscript.js' %}"></script>
+    </body>
+</html>
